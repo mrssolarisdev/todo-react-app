@@ -8,10 +8,12 @@ import{BrowserRouter as Router, Route} from 'react-router-dom';
 import About from './components/pages/About';
 import axios from 'axios';
 
+
 class App extends Component {
   state = {
     todos: []
   }
+
 
   componentDidMount(){
     axios.get('https://jsonplaceholder.typicode.com/todos?_limit=10').then(res => this.setState({todos: res.data}))
@@ -27,15 +29,15 @@ class App extends Component {
   }
 
   delTodo = (id) => {
-    this.setState({todos: [...this.state.todos.filter(todo => todo.id !== id)]})
+    axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`).then(res => 
+    this.setState({todos: [...this.state.todos.filter(todo => todo.id !== id)]}));
+   
   }
   addTodo = (title) =>{
-    const newTodo = {
-      id:uuid(),
-      title:title,
-      completed:false
-    }
-    this.setState({todos: [...this.state.todos, newTodo]})
+    axios.post(URL, {
+      title,
+      completed: false
+    }).then(res => this.setState({todos: [...this.state.todos, res.data]}));
   }
   render (){
     console.log(this.state.todos);
